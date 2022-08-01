@@ -1,0 +1,31 @@
+<style>
+  #title {
+    color: black;
+    text-align: center;
+}
+  #description {
+    font-size: 18px;
+    color: black;
+    text-align: justify;
+}
+  #survey-form {
+    color: black;
+    text-align: justify;
+}
+  #name {
+    color: black;
+    text-align: left;
+}
+  #email {
+    color: black;
+    text-align: left;
+}
+  #number {
+    color: black;
+    text-align: left;
+}
+  #dropdown {
+    color: black;
+    text-align: left;
+}
+</style>

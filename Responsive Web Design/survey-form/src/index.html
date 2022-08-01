@@ -1,0 +1,44 @@
+<!-- 
+
+Hello Camper!
+
+Please read the README below in the JS Editor before beginning. Feel free to delete this message once you have read it. Good luck and Happy Coding! 
+
+- The freeCodeCamp Team 
+
+-->
+<!DOCTYPE html>
+<body>
+  <h1 id = "title">Encuesta de satisfacción</h1>
+  <p id = "description">Esta encuesta trata de averiguar cual es el grado de satisfacción del cliente con el máster realizado.</p>
+  <form id = "survey-form">
+   <fieldset><br>
+    <label for="name" id = "name-label">Alumno:</label>
+  <input type="text" id="name" name="name" required placeholder = "Nombre y apellidos"><br><br>
+  <label for="email" id = "email-label">Email:</label>
+  <input type="email" id="email" name="email" required placeholder = "Correo electrónico"><br><br>
+  <label for="number" id = "number-label">Grado de satisfaccion:</label>
+  <input type="number" id="number" name="number" min = "0" max = "10" placeholder = "Nivel de satisfacción con el máster"><br><br>
+  <label for="country">País de origen:</label>
+  <select name = "country" id = "dropdown">
+    <option>España</option>
+    <option>Latinoamérica</option>
+  </select><br><br>
+    Seleccione su sexo:<br>
+   <label for="hombre">Hombre</label>
+  <input type = "radio" name = "genre" id = "hombre" value = "Hombre"><br>
+    <label for="mujer">Mujer</label>
+    <input type = "radio" name = "genre" id = "mujer" value = "Mujer"><br></br>
+    <div>Sectores en los que ha trabajado:</div>
+     <label for="it">IT</label>
+  <input type = "checkbox" name = "sector" id = "it" value = "IT"><br>
+     <label for = "electronics">Electrónica</label>
+  <input type = "checkbox" name = "sector" id = "electronics" value = "Electrónica"><br>
+    <label for="Investigación">Investigación</label>
+  <input type = "checkbox" name = "sector" id = "investigación" value = "Investigación"><br>
+  <p><label for="comments">Comentarios adicionales:</label></p>
+  <textarea rows = 5 cols = 100 id = "comments">Si quiere realizar algún comentario adicional, puede escribirlo en este recuadro.</textarea><br><br>
+ </fieldset><br>
+  <input type="submit" value="Submit" id = "submit">
+</form>
+</body>
