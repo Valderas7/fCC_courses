@@ -1,0 +1,43 @@
+<style>
+ #header {
+   color: black;
+   text-align: center;
+}
+ header {
+   color: black;
+   text-align: center;
+}
+ #header-img {
+  max-width: 10%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+ #nav-bar {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+ .nav-link {
+   display: inline;
+}
+ #video {
+  max-width: 100%;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+}
+ #form {
+  max-width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+ #submit {
+}
+
+ @media (max-width: 100px) {
+   font-size: 28 px;
+}
+</style>

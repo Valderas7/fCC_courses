@@ -1,0 +1,26 @@
+<style>
+ #main-doc {
+   color: black;
+   font-size: 40px;
+   text-align: center;
+}
+ .main-section {
+   font-size: 20px;
+   text-align: left;
+}
+ .main-section header {  
+   text-decoration: none;   
+   font-size: 18px;
+   text-align: justify;
+}
+
+ @media #navbar(min-width: 100px) {
+   font-size: 28 px;
+}
+
+ #navbar {
+   position: relative;
+   margin-right: 50%;
+   font-size: 18px;
+}
+</style>

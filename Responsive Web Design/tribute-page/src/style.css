@@ -1,0 +1,32 @@
+<style>
+  #main {
+    color: black;
+}
+#title {
+    color: black;
+    font-size: 40;
+}
+#img-div {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+#image {
+  max-width: 20%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+#img-caption {
+  font-size: 15px;
+  font-style: italic;
+  text-align: center;
+}
+#tribute-info {
+  font-size: 20px;
+  text-align: justify;
+}
+#tribute-link {
+  font-size: 20px;
+}
+</style>
