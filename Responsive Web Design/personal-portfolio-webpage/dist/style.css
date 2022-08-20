@@ -1,21 +1,7 @@
-<style>
-#welcome-section {
+h1 {
   font-size: 30px;
 }
-h1 {
-  font-size: 18px;
-  color: black;
-  text-align: justify;
-}
-#projects {
-  font-size: 20px;
-}
-.project-tile {
-  font-size: 18px;
-}
-#profile-link {
-  font-size: 16px;
-}
+
 #navbar {
   position: fixed;
   top: 0;
@@ -24,4 +10,3 @@ h1 {
  @media (min-width: 100px) {
    width: 100%;
 }
-</style>
