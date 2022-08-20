@@ -1,0 +1,94 @@
+// Importado librerías React, ReactDOM
+
+// Array de colores
+const colors = [
+  '#1abc9c',
+  '#f1c40f',
+  '#c0392b',
+  '#8e44ad',
+  '#2c3e50',
+  '#8e44ad',
+  '#2980b9',
+  '#e67e22',
+  '#472E32',
+  '#BDBB99',
+  '#77B1A9',
+  '#73A857'
+];
+
+// Archivo con las citas:
+const quotes_json = 'https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json'
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      // El estado es la cita mostrada
+      quotes: '',
+      index: 0,
+      color: '',
+    }
+    this.getRandomIndex = this.getRandomIndex.bind(this);
+    this.getRandomColor = this.getRandomColor.bind(this);
+  }
+
+// 'componentDidMount' es el método de React para recoger datos. En esta función se actualiza el estado 'quotes' del componente y llama a la función 'getRandomIndex' que actualiza el estado de 'index'.
+  componentDidMount() {
+   fetch(quotes_json).then(response => response.json())
+    .then(response => {
+      this.setState({
+        quotes: response.quotes
+      });
+     this.getRandomIndex();
+     this.getRandomColor();
+    });
+  }
+  
+  // Función que obtiene las 102 citas y obtiene un número aleatorio entre [0-101], que son los índices de cada uno de las citas. 
+//Math.floor redondeaba a la baja.
+  getRandomIndex() {
+    const quotes = this.state.quotes;
+    
+    if (quotes.length > 0) {
+      const index = Math.floor(Math.random() * quotes.length);
+      this.setState({
+        index: index
+      })
+    }
+  }
+  
+  // Función para obtener un color aleatorio y actualizarlo en el estado.
+  getRandomColor() {
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    this.setState({
+        color: color
+      })
+  }
+
+  render() {
+    const quotes = this.state.quotes;
+    const index = this.state.index;
+    
+    // Se selecciona un objeto {cita, autor} aleatorio de todo el array de objetos de citas:
+    const quote = quotes[index];
+                
+    return (
+      <div className = "d-flex justify-content-center vh-100 align-items-center" style ={{backgroundColor: this.state.color}}>
+        <div className = "col-6 p-4 box rounded" id = "quote-box">
+        {/* Solo se muestra la cita y el autor SI tenemos una cita: */}
+        {quote != null && (<div className = "mb-5">
+            <h6 id = "text" style ={{color: this.state.color}}><i className = "fas fa-quote-left"></i> {quote.quote} <i className = "fas fa-quote-right"></i></h6> 
+                    <cite className = "float-end" id = "author" style ={{color: this.state.color}}> {quote.author}</cite>
+                    </div>)
+        }
+          <div className = "d-flex justify-content-between">
+            <a id = "tweet-quote" className = "btn btn-primary btn-sm" href = "twitter.com/intent/tweet" target = "_blank" style ={{backgroundColor: this.state.color}}><i className = "fab fa-twitter"></i> Twittear</a>
+            <button className = "btn btn-primary btn-sm" onClick = {() => {this.getRandomIndex(); this.getRandomColor();}} id = "new-quote" style ={{backgroundColor: this.state.color}}><i className = "fas fa-random"></i> Nueva cita</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(<App/>, document.getElementById("app"))
