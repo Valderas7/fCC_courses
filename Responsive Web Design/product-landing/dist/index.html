@@ -3,38 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <title>CodePen - Product landing</title>
-  <link rel="stylesheet" href="./style.css">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'><link rel="stylesheet" href="./style.css">
 
 </head>
 <body>
 <!-- partial:index.partial.html -->
-<!-- 
-
-Hello Camper!
-
-Please read the README below in the JS Editor before beginning. Feel free to delete this message once you have read it. Good luck and Happy Coding! 
-
-- The freeCodeCamp Team 
-
--->
-<!DOCTYPE html>
-<html><br>
-<header id = "header">Tu teléfono del futuro<br><img src = "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/smartphone-icon-design-template-0adb45337a04145d3c3cd8d7662f4062_screen.jpg?ts=1625744492" id = "header-img"></img>
-<nav id = "nav-bar">
+<html class = "col-12"><br>
+  <header id = "header" class = "m-2"><div class = "h3 text-center"><p class = "bg-light">Tu teléfono del futuro</p><img src = "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/smartphone-icon-design-template-0adb45337a04145d3c3cd8d7662f4062_screen.jpg?ts=1625744492" id = "header-img"></img></div>
+  <p class = "text-justify">Un sistema de cámaras totalmente revolucionario. Una pantalla con una respuesta muy fluida en la que cada toque parece magia. El procesador más rápido que jamás ha tenido un móvil. Una resistencia a golpes y elementos externos extraordinaria. Y la mayor autonomía de un <i>smartphone</i> nunca vista.</p>
+<nav id = "nav-bar" class = "text-end">
   <a href = "#header" class = "nav-link">Ir al principio de la página</a> |
   <a href = "#video" class = "nav-link">Ir al vídeo</a> |
   <a href = "#form" class = "nav-link">Ir al formulario</a> |
 </nav><br>
 </header>
-<video width="320" height="240" controls id = "video"> <source src = "https://www.youtube.com/watch?v=Ht0QzYBHmqM.mp4" type="video/mp4"></video><br><br>
-<form id = "form" action = " https://www.freecodecamp.com/email-submit">
-   <fieldset><br>
+
+<iframe id = "video" width="620" height="345" src="https://www.youtube.com/embed/zNpgoiV4G-U">
+</iframe>
+
+<p class = "m-2 mt-4">Escriba su dirección de correo electrónico para obtener más información:</p>
+<form id = "form" action = " https://www.freecodecamp.com/email-submit" class = "m-2">
+   <fieldset>
     <label for="email">Email:</label>
-  <input type="email" id="email" name="email" required placeholder = "Correo electrónico" value = "Email"><br><br>
-  <input type="submit" value="Submit" id = "submit"></fieldset></form>
+  <input type="email" id="email" name="email" required placeholder = "Correo electrónico"><br><br>
+  <input type="submit" value="Submit" id = "submit" class = "btn btn-primary"></fieldset></form>
 </html>
 <!-- partial -->
-  <script src='https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js'></script><script  src="./script.js"></script>
-
+  <script src='https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js'></script>
 </body>
 </html>
