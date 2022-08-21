@@ -1,13 +1,4 @@
-<style>
- #header {
-   color: black;
-   text-align: center;
-}
- header {
-   color: black;
-   text-align: center;
-}
- #header-img {
+#header-img {
   max-width: 10%;
   display: block;
   margin-left: auto;
