@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
+
+body {
+  background-color: #2980b9;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex; /* Se convierte a un contenedor flexbox */
+  align-items: center; /* Define como los ítems flexbox se alinean respecto al eje Y dentro del contenedor. */
+  justify-content: center; /* Define como los ítems flexbox se alinean respecto al eje X dentro del contenedor. */
+  font-family: 'IBM Plex Sans', "Arial", serif; /* Si la fuente importada no está disponible, se usa la segunda. */
+}
+
+/* Bloque donde se depositan los pads */
+#display {
+  display: flex; /* Se convierte a un contenedor flexbox */
+  flex-wrap: wrap; /* Distribuido en múltiples líneas si es necesario */
+  width: 330px;
+  background-color: silver;
+  box-shadow: 5px 5px #7f8c8d; /* Sombra y color de la misma */
+}
+
+/* Cabecera 'h1' del bloque donde se depositan los pads */
+#display h1 {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+/* Pads */
+.box {
+  width: 100px;
+  height: 100px;
+  border: 2px solid #3498db;
+  border-radius: 3px;
+  margin: 5px; /* margen entre las 9 cajas */
+  background-color: white;
+  color: #34495e;
+  font-size: 25px;
+  display: flex; /* Se convierte a un contenedor flexbox */
+  align-items: center; /* Define como los ítems flexbox se alinean respecto al eje Y dentro del contenedor. */
+  justify-content: center; /* Define como los ítems flexbox se alinean respecto al eje X dentro del contenedor. */
+  cursor: pointer; /* Activa un cursor en el ratón cuando éste se desliza por los elementos (los pads).*/
+  box-shadow: 2px 2px #7f8c8d; /* Sombra y color de la misma*/
+}
+
+/* Pseudo-clase que representa un elemento que el usuario está activando */
+.box:active, .drum-pad.active {
+  opacity: 0.6;
+  background-color: #27ae60;
+  transform: scale(0.75); /* Reduce el botón un 25% al ser pulsado*/
+}

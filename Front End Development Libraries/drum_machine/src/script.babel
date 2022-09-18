@@ -1,0 +1,130 @@
+const rhythms = [
+  {
+    key: 'Q',
+    mp3: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3'
+  },
+  {
+    key: 'W',
+    mp3: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3'
+  },
+  {
+    key: 'E',
+    mp3: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3'
+  },
+  {
+    key: 'A',
+    mp3: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3'
+  },
+  {
+    key: 'S',
+    mp3: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3'
+  },
+  {
+    key: 'D',
+    mp3: 'https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3'
+  },
+  {
+    key: 'Z',
+    mp3: 'https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3'
+  },
+  {
+    key: 'X',
+    mp3: 'https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3'
+  },
+  {
+    key: 'C',
+    mp3: 'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3'
+  },
+];
+
+// Componente funcional sin estado
+const App = function() {
+  return (
+    <div id="display">
+      <h1>Pulsa una nota:</h1>
+      {rhythms.map((rhythm, index) => (
+        /* Debajo del 'div' con 'id=display' va el componente hijo 'DrumPads', donde se recopilan los 'div' y 'audios' para cada Pad. Con el método 'map' se referencia cada propiedad de cada objeto 'rhythm' del array 'rhythms' y SE PASAN PROPIEDADES AL COMPONENTE HIJO. */
+        <DrumPads text={rhythm.key} key={index} sound={rhythm.mp3} />
+      ))}
+  </div>
+  )
+};
+
+// Componente React sin estado
+class DrumPads extends React.Component {
+  constructor(props) {
+    super(props);
+    
+    this.playSound = this.playSound.bind(this);
+
+    /* Se inicializa la variable 'audio' con 'createRef' (1.se crea referencia), que permite pasar la variable al elemento que se quiere referenciar (<audio>). Esta variable, a su vez, almacena la propiedad del componente padre que almacena los audios .mp3 (2. tiene la referencia a los audios, como se puede apreciar en la función 'render'). */
+    this.audio = React.createRef();
+  }
+  
+    /* Con esta función se elimina la clase '.drum-pad.active' después de un tiempo tras pulsar en el teclado los botones del Pad (tras terminar el evento), de forma que los pads vuelven a su posición original cuando termina su sonido correspondiente y no permanecen indefinidamente como si estuvieran pulsados. */
+    componentDidMount() {
+      this.audio.current.addEventListener('ended', function(event) {
+        const parent = event.target.parentNode;
+        parent.classList.remove('active');
+    });
+  }
+  
+  // Función para reproducir sonido (pulsando los PADS) en React teniendo una referencia.
+  playSound () {
+    // Se reproduce sonido actual:
+    this.audio.current.play();
+    
+    /* Se recopila ID del audio actual y el nodo padre del audio (<div className="drum-pad), para añadirle la clase '.drum-pad.active': */ 
+    const id = this.audio.current.id;
+    const parent = this.audio.current.parentNode;
+    parent.classList.add('active');
+    
+    /* Se almacena el nodo padre de <div className="drum-pad (<div id="display">) */
+    const display = parent.parentNode;
+    
+    /* En dicho nodo, con el método 'querySelector' de HTML DOM se selecciona el elemento 'h1' y se modifica su texto interno cuando se reproduce un sonido. */
+    display.querySelector('h1').innerText = `${id} está sonando`;
+  }
+  
+  render() {
+    /* Se crean variables para almacenar las propiedades creadas en el componente padre y que han sido pasadas al componente hijo. */
+    const text = this.props.text;
+    const audio = this.props.sound;
+    const index = this.props.index;
+    
+    return (
+      <div className="drum-pad box" onClick={this.playSound} id={`drum-${text}`}>
+        {text}
+        <audio ref={this.audio} src={audio} className="clip" id={text}>         </audio>
+      </div>
+    )
+  }
+}
+
+/* Método HTML DOM que adjunta un controlador de eventos al documento. El primer argumento es el nombre del evento, y el segundo, la función que se ejecuta cuando ocurre el evento. 
+Se almacena la tecla pulsada y el audio que tiene como ID esa tecla. Sirve para que se reproduzcan los sonidos pulsando las teclas en el teclado. */
+document.addEventListener('keypress', function(event) {
+  const key_id = event.key.toUpperCase();
+  const audio = document.getElementById(key_id);
+  
+  /* Si se obtiene un elemento <audio> con un ID como el de la tecla pulsada, es que ese elemento <audio> existe (hay 9 elementos <audio>, cada uno con un ID igual a la letra que lo representa) y se entra en el bucle 'if'; y si ese elemento no existe (las demás letras restantes del abecedario), no se entra en el bucle. */
+  if(audio) {
+    /* Establece en el segundo 0 la posición para la reproducción del audio */
+    audio.currentTime = 0;
+    
+    /* Se añade al nodo padre de <audio> (<div con className="drum-pad") la clase 'active' ('.drum-pad.active') */
+    const parent = audio.parentNode;
+    parent.classList.add('active');
+    
+    /* Se almacena el nodo padre de <div className="drum-pad (<div id="display">) */
+    const display = parent.parentNode;
+    
+    /* En dicho nodo, con el método 'querySelector' de HTML DOM se selecciona el elemento 'h1' y se modifica su texto interno cuando se reproduce un sonido. */
+    display.querySelector('h1').innerText = `${key_id} está sonando`;
+    
+    // Se reproduce el audio
+    audio.play();
+  }
+})
+
+ReactDOM.render(<App />, document.getElementById('drum-machine'));
