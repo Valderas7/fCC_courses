@@ -1,0 +1,62 @@
+const initial_message = `# <center>Previsualizador</center>
+![Markdown](https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Markdown-mark.svg/1200px-Markdown-mark.svg.png)
+
+------------
+
+## Resumen
+\`\`\`
+Esta herramienta permite previsualizar el texto escrito de la ventana del editor en formato Markdown tal y como se puede apreciar en la ventana del previsualizador de la derecha.
+\`\`\`
+
+> **Markdown** es un lenguaje de marcado ligero que trata de conseguir la máxima legibilidad y facilidad de publicación tanto en su forma de entrada como de salida.
+Si quieres saber más sobre el formato \`Markdown\`, pincha [aquí](https://es.wikipedia.org/wiki/Markdown).
+
+Para usar la herramientas solo tienes que hacer lo siguiente:
+- Escribir el texto en el editor
+- Esperar la previsualización`;
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      // Contenido dentro del editor ('textarea'):
+      text: initial_message
+    }
+    this.handleChange = this.handleChange.bind(this);
+  }
+  
+  handleChange(event) {
+    this.setState({
+      // 'event.target' devuelve el elemento DOM que ha desencadenado el evento. Y 'value', su valor.
+      text: event.target.value
+    })
+  }
+  
+  render () {
+    const text = this.state.text;
+    
+    // El método 'parse' de la librería 'marked' transforma el argumento entre paréntesis a formato 'markdown'. '{breaks:true} activa los saltos de líneas en el previsualizador para saltos de línea en el editor':
+    const markdown = marked.parse(text, {breaks: true});
+    
+    return (
+      <div>
+        <h2 className="text-center m-4">Convierte tu documento Markdown</h2>
+        <div className = "row">
+          <div className = "col-6">
+            <h6 className="text-center">Editor</h6>
+            <textarea className="form-control rounded p-2" id="editor" value={text} onChange = {this.handleChange}>
+            </textarea>
+          </div>
+          <div className = "col-6">
+            <h6 className = "text-center">Previsualizador</h6>
+            {/* 'dangerouslySetInnerHTML' configura directamente desde una fuente externa el contenido HTML */}
+            <div className="preview rounded p-2 mb-1" id = "preview" dangerouslySetInnerHTML={{__html: markdown}}>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<App/>, document.getElementById('app'));
