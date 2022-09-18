@@ -1,0 +1,129 @@
+// URL de la API
+const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json';
+
+// Variables para almacenar la futura respuesta de la API y el array de valores almacenado dentro del propio objeto de la API:
+let data, values;
+
+/* Conexión con la API para obterner datos. La función dentro del método 'onload' es llamada cuando una transacción XMLHttpRequest se completa satisfactoriamente después de enviarla ('send'). Por su parte, el método 'responseText' devuelve un DOMString que contiene la respuesta a la consulta como texto, o null si ésta no tuvo exito o aun no ha sido completada. */
+const req = new XMLHttpRequest();
+req.open("GET", url, true);
+req.onload = function () {
+  data = JSON.parse(req.responseText);
+  values = data.data;
+  sizeSVG();
+  scales();
+  axisPlot();
+  barsPlot();
+  tooltip();
+};
+req.send();
+
+// Los datos ya estarían recopilados dentro de la función del 'onload'. Ahora se pasaría a realizar el diagrama de barras dentro del gráfico vectorial escalable con esos datos ya recogidos. Como los valores de la API están recogidos dentro de la función del método 'onload' y son de ámbito local, se definen funciones para ejecutarlas dentro del 'onload':
+// Anchura, altura y padding del gráfico vectorial escalable
+const width = 1000;
+const height = 550;
+const padding = 50;
+
+// Tamaño del SVG
+function sizeSVG() {
+  svg = d3.select("svg").
+  attr("width", width).
+  attr("height", height);
+}
+
+// Escalas
+function scales() {
+  // Se establece la escala vertical de las barras del diagrama, para que no sobrepasen el SVG, y que representa el valor del PIB: 
+  yScale = d3.scaleLinear().
+  domain([0, d3.max(values, y_coordinate => {
+    return y_coordinate[1]; // 0: Fechas; 1: PIB
+  })]).
+  range([0, height - 2 * padding]);
+
+  // Se establece la escala para determinar donde colocar horizontalmente las distintas barras del diagrama, para que no sobrepasen el SVG, y que representan las fechas: 
+  xScale = d3.scaleLinear().
+  domain([0, values.length - 1]).
+  range([padding, width - padding]);
+
+  // Se establece la escala para establecer el eje X del diagrama de barras, que representa las fechas (YYY-MM-DD). Las fechas en el archivo JSON son 'strings', por lo que primero hay que convertirlos a fechas numéricas para usar el método 'scaleTime':
+  let numerical_dates = values.map(arr => {
+    return new Date(arr[0]); // 0: Fechas; 1: PIB
+  });
+
+  xAxisScale = d3.scaleTime().
+  domain([d3.min(numerical_dates), d3.max(numerical_dates)]).
+  range([padding, width - padding]); // El mismo que en xScale para que el eje coincida debajo de las barras
+
+  // Se establece la escala para establecer el eje Y del diagrama de barras, que representa los valores del PIB.
+  yAxisScale = d3.scaleLinear().
+  domain([0, d3.max(values, y_coordinate => {
+    return y_coordinate[1]; // 0: Fechas; 1: PIB
+  })]).
+  range([height - padding, padding]); // Inversa de yScale 
+}
+
+// Se generan los ejes
+function axisPlot() {
+  // Se crea el eje X basándonos en las escalas definidas anteriormente. Posteriormente, éste se renderiza con un componente 'g' (grupo) y se posiciona en el lugar correcto con el atributo de transformación.
+  let xAxis = d3.axisBottom(xAxisScale);
+  svg.append("g").
+  attr('id', 'x-axis').
+  attr('transform', 'translate(0, ' + (height - padding) + ')').
+  call(xAxis).
+  attr('color', 'white');
+
+  // Se crea el eje Y basándonos en las escalas definidas anteriormente. Posteriormente, éste se renderiza con un componente 'g' (grupo) y se posiciona en el lugar correcto con el atributo de transformación.
+  let yAxis = d3.axisLeft(yAxisScale);
+  svg.append("g").
+  attr('id', 'y-axis').
+  attr('transform', 'translate(' + padding + ', 0)').
+  call(yAxis).
+  attr('color', 'white');
+}
+
+// Se generan las barras
+function barsPlot() {
+  svg.selectAll("rect").
+  data(values).
+  enter().
+  append("rect").
+  attr('class', 'bar').
+  attr('data-date', values => {
+    return values[0]; // 0: Fechas; 1: PIB
+  }).
+  attr('data-gdp', values => {
+    return values[1]; // 0: Fechas; 1: PIB
+  }).
+  attr("width", 5) // anchura de barras
+  .attr("height", data => {
+    return yScale(data[1]);
+  }).
+  attr("x", (data, index) => {
+    return xScale(index); // Posicionamiento barras eje X
+  }).
+  attr("y", (data, index) => {
+    return height - padding - yScale(data[1]); // Posicionamiento barras eje Y
+  }).
+  attr('fill', 'white');
+}
+
+// Realizar tooltip (aparece debajo de la gráfica) que muestra la fecha. Este estará oculto hasta que se pase el ratón sobre alguna de las barras del diagrama.
+function tooltip() {
+  tooltip = d3.select('body').
+  append('text').
+  attr('id', 'tooltip').
+  style('visibility', 'hidden').
+  style('width', 'auto').
+  style('height', 'auto');
+
+  svg.selectAll('rect').
+  on('mouseover', (event, data) => {
+    tooltip.transition().style('visibility', 'visible');
+    tooltip.text(data[0]);
+    tooltip.attr('data-date', data[0]);
+    tooltip.style('color', 'white');
+  }).
+  on('mouseout', () => {
+    tooltip.transition().style('visibility', 'hidden');
+  });
+}

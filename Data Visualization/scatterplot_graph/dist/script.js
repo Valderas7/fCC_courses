@@ -1,0 +1,174 @@
+/* Diagrama de dispersión; eje X: año; eje Y: tiempo en minutos */
+// URL de la API
+const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json';
+
+/* Conexión con la API para obterner datos. La función dentro del método 'onload' es llamada cuando una transacción XMLHttpRequest se completa satisfactoriamente después de enviarla ('send'). Por su parte, el método 'responseText' devuelve un DOMString que contiene la respuesta a la consulta como texto, o null si ésta no tuvo exito o aun no ha sido completada. */
+const req = new XMLHttpRequest();
+req.open("GET", url, true);
+req.onload = function () {
+  data = JSON.parse(req.responseText);
+  sizeSVG();
+  scales();
+  axisPlot();
+  pointsPlot();
+  legend();
+  tooltip();
+};
+req.send();
+
+// Los datos ya estarían recopilados dentro de la función del 'onload'. Ahora se pasaría a realizar el diagrama de barras dentro del gráfico vectorial escalable con esos datos ya recogidos. Como los valores de la API están recogidos dentro de la función del método 'onload' y son de ámbito local, se definen funciones para ejecutarlas dentro del 'onload':
+// Anchura, altura y padding del gráfico vectorial escalable
+const width = 1000;
+const height = 500;
+const padding = 50;
+
+// Tamaño del SVG
+function sizeSVG() {
+  svg = d3.select("svg").
+  attr("width", width).
+  attr("height", height);
+}
+
+// Escalas
+function scales() {
+  // Se establece la escala para determinar donde colocar horizontalmente los distintos puntos del gráfico de dispersión, para que no sobrepasen el SVG, y que representan las fechas:
+  xAxisScale = d3.scaleLinear().
+  domain([d3.min(data, item_array => {
+    return item_array['Year'] - 1;
+  }),
+  d3.max(data, item_array => {
+    return item_array['Year'] + 1;
+  })]).
+
+  range([padding, width - padding]);
+
+  // Se establece la escala para determinar donde colocar verticalmente los distintos puntos del gráfico de dispersión, para que no sobrepasen el SVG, y que representan los tiempos de subida al puerto (los mejores tiempos, que sonlos más bajos, van más arriba en el gráfico, y los peores, abajo):
+  yAxisScale = d3.scaleTime().
+  domain([d3.min(data, item_array => {
+    return new Date(item_array['Seconds'] * 1000);
+  }),
+  d3.max(data, item_array => {
+    return new Date(item_array['Seconds'] * 1000);
+  })]).
+
+  range([padding, height - padding]);
+}
+
+// Se generan los ejes
+function axisPlot() {
+  // Se crea el eje X basándonos en las escalas definidas anteriormente. Posteriormente, éste se renderiza con un componente 'g' (grupo) y se posiciona en el lugar correcto con el atributo de transformación.
+  let xAxis = d3.axisBottom(xAxisScale).
+  tickFormat(d3.format('d')); // Para quitar la coma de los años en los ejes
+
+  svg.append("g").
+  call(xAxis).
+  attr('id', 'x-axis').
+  attr('transform', 'translate(0,' + (height - padding) + ')').
+  style('color', 'white');
+
+  // Se crea el eje Y basándonos en las escalas definidas anteriormente. Posteriormente, éste se renderiza con un componente 'g' (grupo) y se posiciona en el lugar correcto con el atributo de transformación.
+  let yAxis = d3.axisLeft(yAxisScale).
+  tickFormat(d3.timeFormat('%M:%S')); // Para que muestre el tiempo en minutos y segundos
+
+  svg.append("g").
+  call(yAxis).
+  attr('id', 'y-axis').
+  attr('transform', 'translate(' + padding + ', 0)').
+  style('color', 'white');
+}
+
+// Se generan los puntos de dispersión
+function pointsPlot() {
+  svg.selectAll("circle").
+  data(data).
+  enter().
+  append("circle").
+  attr('class', 'dot').
+  attr("r", 5).
+  attr("data-xvalue", item_array => {
+    return item_array['Year'];
+  }).
+  attr("data-yvalue", item_array => {
+    return new Date(item_array['Seconds'] * 1000);
+  }).
+  attr("cx", item_array => {
+    return xAxisScale(item_array['Year']);
+  }).
+  attr("cy", item_array => {
+    return yAxisScale(new Date(item_array['Seconds'] * 1000));
+  }).
+  style('fill', item_array => {
+    if (item_array['Doping'] == '') {
+      return 'green';
+    } else
+    {
+      return 'red';
+    }
+  });
+}
+
+// Leyenda del gráfico de dispersión
+function legend() {
+  colors = ['red', 'green'];
+  legendContainer = svg.append('g').
+  attr('id', 'legend');
+
+  legend = legendContainer.selectAll('#legend').
+  data(colors).
+  enter().
+  append('g').
+  attr('class', 'legend-label').
+  attr('transform', function (color, value) {
+    return 'translate(0,' + (height / 2 - value * 20) + ')';
+  });
+
+  legend.append('rect').
+  attr('x', width - 18).
+  attr('width', 18).
+  attr('height', 18).
+  attr('fill', color => {
+    if (color == 'red') {
+      return colors[0];
+    } else
+    {
+      return colors[1];
+    }
+  });
+
+  legend.append('text').
+  attr('x', width - 24).
+  attr('y', 9).
+  attr('fill', 'white').
+  attr('dy', '.35em').
+  style('text-anchor', 'end').
+  text(function (value) {
+    if (value == colors[0]) {
+      return 'Con acusaciones de dopaje';
+    } else
+    {
+      return 'Sin acusaciones de dopaje';
+    }
+  });
+}
+
+// Realizar tooltip (aparece debajo de la gráfica) que muestra la fecha. Este estará oculto hasta que se pase el ratón sobre alguna de las barras del diagrama.
+function tooltip() {
+  tooltip = d3.select('body').
+  append('text').
+  attr('id', 'tooltip').
+  style('visibility', 'hidden').
+  style('width', 'auto').
+  style('height', 'auto');
+
+  svg.selectAll('circle').
+  on('mouseover', (event, data) => {
+    tooltip.transition().style('visibility', 'visible').
+    attr("data-html", "true");
+    tooltip.html(data['Name'] + ' (' + data['Nationality'] + ')<br>' + 'Mejor tiempo nº ' + data['Place']).
+    attr('data-year', data['Year']).
+    style('color', 'white');
+  }).
+  on('mouseout', () => {
+    tooltip.transition().style('visibility', 'hidden');
+  });
+}

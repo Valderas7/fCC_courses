@@ -1,0 +1,202 @@
+// Además de D3, se importa la librería TopoJSON, una extensión de GeoJSON que define el tipo “Topology”, el cual está incluido en el archivo JSON de los datos topológicos.
+
+/* Archivos JSON de datos educacionales y de datos topológicos (para poder dibujar el mapa del país, ciudad o pueblo): */
+const education_url = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json";
+const county_url = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json";
+
+/* Conexión con la API para obtener datos. Esta vez se hace con el método JSON de 'D3' para variar y ver otras opciones. Primero se recopila los datos topológicos para dibujar el mapa en el SVG, y posteriormente, una vez recogidos estos, ya se recopilan los datos educacionales. 
+'D3' no dibuja en formato TopoJSON directamente, por lo que hay que convertirlo a formato GeoJSON con el método 'feature' (primer argumento los datos a convertir, y el segundo la información clave a extraer). Una vez convertido a dicho formato, nos quedamos con la propiedad 'features', que es la que nos interesa. 
+Al final tenemos una longitud de 3142 en los datos geográficos y educacionales. La propiedad ID de los datos geográficos coincide con la propiedad FIPS de los datos educacionales. */
+d3.json(county_url).then(
+(data, error) => {
+  if (error) {
+    console.log(error); // Para saber el error
+  } else
+  {
+    counties_data = topojson.feature(data, data['objects']['counties']).features;
+    d3.json(education_url).then(
+    (data, error) => {
+      if (error) {
+        console.log(error); // Para saber el error
+      } else
+      {
+        education_data = data;
+        sizeSVG();
+        drawMap();
+        legend();
+        tooltip();
+      }
+    });
+
+  }
+});
+
+
+// Los datos ya estarían recopilados. Ahora se pasaría a realizar el mapa dentro del gráfico vectorial escalable con esos datos ya recogidos.
+// Anchura, altura y padding del gráfico vectorial escalable
+const width = 1000;
+const height = 650;
+const padding = 70;
+
+// Tamaño del SVG
+function sizeSVG() {
+  svg = d3.select("#canvas").
+  attr("width", width).
+  attr("height", height);
+}
+
+/* Función para dibujar el mapa. El atributo 'd' son los datos que usa el SVG para dibujar el mapa y 'geoPath' el método para convertir de GeoJSON a path. Se correlaciona el ID de los datos topológicos y el FIPS de los datos educacionales para rellenar los colores del mapa, ya que ambas propiedades se refieren al mismo dato. */
+function drawMap() {
+  svg.selectAll('path').
+  data(counties_data).
+  enter().
+  append('path').
+  attr('class', 'county').
+  attr('d', d3.geoPath()).
+  attr('fill', county_features => {
+    let fips = county_features['id']; // C.P. en el JSON topográfico
+    // Se busca en el JSON educacional el objeto cuyo C.P. coincide con el extraído en el JSON topográfico y se guarda en una variable.
+    let county = education_data.find(county => {
+      return county['fips'] === fips;
+    });
+    // Se busca la puntuación de diplomatura en esa variable para colorear el mapa según el valor:
+    percentage = county['bachelorsOrHigher'];
+    if (percentage <= 10) {
+      return 'red';
+    } else
+    if (percentage <= 20) {
+      return 'orange';
+    } else
+    if (percentage <= 30) {
+      return 'yellow';
+    } else
+    if (percentage <= 40) {
+      return 'LightGreen';
+    } else
+    {
+      return 'Green';
+    }
+  })
+  // Story 7:
+  .attr('data-fips', county => {
+    return county['id'];
+  })
+  // Story 7:
+  .attr('data-education', county => {
+    let single_county = education_data.find(object => {
+      return object['fips'] === county['id'];
+    });
+    return single_county['bachelorsOrHigher'];
+  });
+}
+
+// Leyenda del mapa coroplético
+function legend() {
+  colors = ['red', 'orange', 'yellow', 'LightGreen', 'Green'];
+  legendContainer = svg.append('g').
+  attr('id', 'legend');
+
+  legend = legendContainer.selectAll('#legend').
+  data(colors).
+  enter().
+  append('g').
+  attr('class', 'legend-label');
+
+  legend.append('rect').
+  attr('x', (color, value) => {
+    return padding + 50 + 150 * value;
+  }).
+  attr('y', height - padding + padding / 2).
+  attr('width', 150).
+  attr('height', 20).
+  attr('fill', color => {
+    if (color == colors[0]) {
+      return colors[0];
+    } else
+    if (color == colors[1]) {
+      return colors[1];
+    } else
+    if (color == colors[2]) {
+      return colors[2];
+    } else
+    if (color == colors[3]) {
+      return colors[3];
+    } else
+    {
+      return colors[4];
+    }
+  });
+
+  legend.append('text').
+  attr('font-weight', 'bold').
+  attr('x', (color, value) => {
+    if (value == 0) {
+      return padding * 3.3;
+    }
+    if (value == 1) {
+      return padding * 5.5;
+    }
+    if (value == 2) {
+      return padding * 7.7;
+    }
+    if (value == 3) {
+      return padding * 9.8;
+    }
+    if (value == 4) {
+      return padding * 12.05;
+    }
+  }).
+  attr('y', height - padding + padding / 1.57).
+  attr('fill', 'white').
+  attr('dy', '.35em').
+  style('text-anchor', 'end').
+  text(function (value) {
+    if (value == colors[0]) {
+      return '[0%, 10%]';
+    } else
+    if (value == colors[1]) {
+      return '(10%, 20%]';
+    } else
+    if (value == colors[2]) {
+      return '(20%, 30%]';
+    } else
+    if (value == colors[3]) {
+      return '(30%, 40%]';
+    } else
+    {
+      return '(40%, 100%]';
+    }
+  });
+}
+
+// Realizar tooltip (aparece debajo de la gráfica) que muestra la fecha. Este estará oculto hasta que se pase el ratón sobre alguna de las barras del diagrama.
+function tooltip() {
+  tooltip = d3.select('text').
+  attr('id', 'tooltip').
+  style('visibility', 'hidden').
+  style('width', 'auto').
+  style('height', 'auto');
+
+  svg.selectAll('path')
+  // Cuando el ratón pasa por las celdas:
+  .on('mouseover', (event, object) => {
+    tooltip.transition().style('visibility', 'visible');
+
+    fips_education = education_data.find(fips_item => {
+      return fips_item['fips'] === object['id'];
+    });
+
+    tooltip.attr('data-education', fips_education['bachelorsOrHigher']).
+    style('color', 'navy');
+    tooltip.html(fips_education['area_name'] + ' (' +
+    fips_education['state'] + ')' + '<br>' +
+    'FIPS: ' + fips_education['fips'] +
+    '. Porcentaje: ' + fips_education['bachelorsOrHigher'] +
+    '%');
+  })
+
+  // Cuando el ratón no pasa por las celdas:
+  .on('mouseout', () => {
+    tooltip.transition().style('visibility', 'hidden');
+  });
+}

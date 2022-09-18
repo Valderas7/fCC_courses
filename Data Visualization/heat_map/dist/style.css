@@ -1,0 +1,16 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #e8d8c3;
+}
+
+h4 {
+  font-family: "Times New Roman", Times, serif;
+  
+}
+
+svg {
+  background-color: #F9F6EE 
+}
