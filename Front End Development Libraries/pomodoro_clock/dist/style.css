@@ -1,0 +1,64 @@
+/* Todo el documento HTML (tag 'body')*/
+body {
+  background-color: #2980b9;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Comic Sans MS', sans-serif;
+  min-height: 100vh;
+  text-align: center;
+}
+
+/* Para los botones */
+button {
+  background-color: #aaa69d;
+  color: white;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 10px 15px;
+  margin: 10px;
+}
+
+/* Contenedores de los botones de los tiempos de descanso y de trabajo del temporizador; y los botones centrales del reloj. */
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Contenedor de los temporizadores */
+.timer-container {
+  margin: -70px 20px 20px;
+}
+
+/* Contenedor de los títulos de los temporizadores */
+.timer-container h2 {
+  margin: 0;
+}
+
+/* Contenedor de los tiempos que aparecen en los temporizadores */
+.actions-wrapper span {
+  font-size: 40px;
+  margin: 0 20px;
+  width: 40px;
+}
+
+/* Contenedor del reloj */
+.clock-container {
+  border: 2px solid #fff;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 10px 100px;
+  margin-top: 20px;
+}
+
+/* Contenedor del tiempo del reloj */
+.clock-container span {
+  font-size: 80px;
+}
+
+/* Contenedor de la cabecera 'h1' del reloj */
+.clock-container h1 {
+  margin: 0;
+}

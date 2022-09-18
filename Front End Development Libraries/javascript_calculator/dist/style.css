@@ -1,0 +1,104 @@
+/* Importar fuente */
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+/* La anchura y la altura de TODOS(*) los elementos se aplican a todas las partes del elemento: el contenido, el padding y los márgenes.*/
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #c0c0d1;
+  font-family: 'Roboto', sans-serif;
+  min-height: 100vh; /* 100% de altura del viewport (no del documento) */
+  display: flex; /* Se transforma en un contenedor 'flexbox'*/
+  align-items: center; /* Items centrados sobre el eje Y */
+  justify-content: center; /* Items centrados sobre el eje X */
+}
+
+/* Clase para el contorno negro de la calculadora */
+.calculator {
+  background-color: #323232;
+  box-shadow: 3px 3px #323232; /* Sombra eje X, eje Y y color */
+  display: flex;
+  flex-wrap: wrap; /* Los items flexbox son distribuidos en varías líneas SI FUERA NECESARIO.*/
+  padding: 5px;
+  height: 390px;
+  width: 250px;
+}
+
+/* ID para la pantalla amarillenta de display */
+#display {
+  color: black;
+  background-color: #FEFFD7;
+  font-size: 22px;
+  position: relative;
+  padding: 30px 15px;
+  text-align: right;
+  height: 70px;
+  width: 100%;
+}
+
+/* Contenedor de la parte de la calculadora que posee los números y el botón de AC (borrado total). */
+.nums-container {
+  width: 75%;
+}
+
+/* Contenedor de la parte de la calculadora que contiene los símbolos de las distintas operaciones. */
+.ops-container {
+  width: 25%;
+  background-color: purple;
+}
+
+/* Botones */
+button {
+  border: 1px solid black;
+  border-radius: 0%;
+  cursor: pointer;
+  font-size: 28px;
+  margin: 5px;
+  height: 50px;
+  width: 50px;
+}
+
+/* Pseudoclase cuando el puntero pasa por encima de los botones */
+button:hover {
+  opacity: 0.8;
+}
+
+/* Pseudo-clase que se activa al pulsar los botones. */
+button:active {
+  transform: scale(0.8);
+}
+
+/* Pseudoclase que se aplica cuando un botón tiene el enfoque (acepta eventos de ratón o teclado u otras formas de entrada). */
+button:focus {
+  outline: none;
+}
+
+/* Botón grande en horizontal */
+button.big-h {
+  border-radius: 50px;
+  width: 110px;
+}
+
+/* Color para botones de operadores */
+button.blue {
+  background-color: #34495e;
+  color: #fff;
+}
+
+/* Color para botones de números */
+button.grey {
+  background-color: #bdc3c7;
+  color: #fff;
+}
+
+/* Color botón AC y punto decimal */
+button.red {
+  background-color: #c0392b
+}
+
+/* Margen derecho botón AC */
+button.ac {
+  margin-right: 50%;
+}

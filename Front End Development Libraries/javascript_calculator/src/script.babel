@@ -1,0 +1,151 @@
+// Números, operadores y objeto creado con ambas variables.
+const numbers = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0];
+const operators = [ '/', '*', '-', '+'];
+
+const numbers_operators_dict = {
+  7: 'seven', 
+  8: 'eight', 
+  9: 'nine', 
+  4: 'four', 
+  5: 'five', 
+  6: 'six', 
+  1: 'one', 
+  2: 'two', 
+  3: 'three', 
+  0: 'zero',
+  '/': 'divide', 
+  '*': 'multiply', 
+  '-': 'subtract', 
+  '+': 'add'
+}
+
+// Componente React con estado
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+  /* Tres propiedades en el estado: el último botón presionado, el número que hay en el 'display', y la operación a ejecutar (suma, resta, etc). */
+  this.state = {
+    lastPressed: undefined,
+    display: '0',
+    operation: undefined
+   }
+    this.handleClick = this.handleClick.bind(this);
+  }
+  
+  // Función que se ejecuta cuando pulsamos un botón de la calculadora (propiedad 'OnClick' de cada botón)
+  handleClick (event) {
+    // Variables para almacenar los valores del estado de la pantalla y del último botón pulsado:
+    const display = this.state.display;
+    const lastPressed = this.state.lastPressed;
+    
+    /* Se almacena el contenido de texto del evento, es decir, el texto del botón presionado (0, 1 ,2, *, -, etc) */
+    const innerText = event.target.innerText;
+    
+    /* Se crea un switch-case dependiendo de la tecla pulsada */
+    switch(innerText) {
+        /* Si se pulsa 'AC', la pantalla de 'display' se resetea a cero. */
+        case 'AC': {
+          this.setState({
+            display: '0',
+          });
+          break;
+        }
+        
+        /* Si se pulsa '=', se evalúa la operación que hay en el 'display' y se actualiza el estado del 'display, es decir, que se muestra en la pantalla la operación ya evaluada. */
+        case '=': {
+          const evaluated = eval(display); // 'eval' evalúa expresión
+          this.setState({
+            display: evaluated
+          });
+          break;
+        }
+        
+        /* Si el botón pulsado es el punto decimal, se divide por operadores lo que se está mostrando en el 'display', creandose un array de solo números. De este array, se coge el último número (que es el último número pulsado anteriormente a pulsar el punto decimal). Si este último número no tiene ya un punto decimal (esto se hace para que no haya dos puntos decimales seguidos), el display se actualiza para que sea el mismo que anteriormente, pero con la adición del punto decimal. */
+        case '.': {
+          const splitted = display.split(/[\+\-\*\/]/);
+          const last = splitted.slice(-1)[0];
+        
+          if(!last.includes('.')) {
+            this.setState({
+              display: display + '.'
+            })
+          }
+          break;
+        }
+        
+        /* Caso por defecto */
+        default: {
+          let calculation = undefined;  
+          /* Si se pulsa un botón de operador... */
+          if(operators.includes(innerText)) {
+            /* Si este botón de operador es el último pulsado anteriormente (se han pulsado dos operadores seguidos) y no es la operación de resta, entonces se divide todos los caracteres del 'display' en un array, el cual se invierte. Se encuentra el índice del elemento que no es un espacio y que se incluye dentro del array 'numbers', es decir, se encuentra el índice del número (0-9). Una vez encontrado este índice, se selecciona dentro del 'display' el tramo que va desde el principio del 'display' hasta la longitud del 'display' menos el índice del número, añadiendo el siguiente botón pulsado que provoca el evento, por lo que se ejecuta la última operación indicada en la calculadora  */
+            if(operators.includes(lastPressed) && innerText !== '-') {
+              const lastNumberIdx = display.split('').reverse()
+              .findIndex(char => char !== ' ' && numbers.includes(+char)); 
+              calculation = display.slice(0, display.length - lastNumberIdx) + ` ${innerText} `;
+            } 
+            /* Si en cambio, el botón de operador pulsado es el de resta, o el operador pulsado de ('+', '*' o '/') no se pulsa dos veces seguidas, entonces la pantalla de 'display' simplemente se actualiza con el botón pulsado. */
+            else {
+              calculation = `${display} ${innerText} `;
+            }
+          } 
+          /* Si no es un botón de operador el pulsado, entonces, si el display es un cero, se mostrará el botón pulsado que ha provocado el evento ('innerText'); y si el display no es cero, sino que ya tiene algún número u operación en marcha, entonces el 'display' será el mismo que anteriormente pero añadiéndole el botón pulsado que ha provocado el evento ('display + innerText') */
+          else {
+            calculation = (display === '0') ? innerText : (display + innerText);
+          }
+          
+          /* Se actualiza el estado del 'display' con la tecla definida según los bucles anteriores */
+          this.setState({
+            display: calculation
+          });
+        }
+    }
+    
+    /* Ya fuera del bucle switch-case, el último botón pulsado en la calculadora siempre será el que esté en la propiedad 'lastPressed' del estado : */
+    this.setState({
+      lastPressed: innerText
+    })
+    
+  }
+  
+  /* Una vez definido el comportamiento del componente React, se renderiza en pantalla. */
+  render() {
+    // Variables para almacenar propiedades del estado
+    const currentNumber = this.state.currentNumber;
+    const display = this.state.display;
+    
+    return (
+      /* En el contenedor de la calculadora, se añade el contenedor de la pantalla de 'display', el contenedor de números y el contenedor de operadores. */
+      <div className="calculator">        
+        <div id="display">{display}</div>
+        
+        {/* En el contenedor de números... */}
+        <div className="nums-container">
+          {/* En primer lugar se añade el botón de AC, con las clases para establecerlo de color rojo y con anchura mayor. */}
+          <button className="big-h red ac" id="clear" onClick={this.handleClick}>AC</button>
+          
+          {/* En segundo lugar, se mapea los números con el array de número, para crear los botones para todos ellos, ponerlos con fondo gris, y hacer que ejecuten la función 'handleClick' cuando son pulsados. (Cuando el número es el 0, aparte de la clase para hacerlo gris, se añade la clase 'button-big-h', que lo hace más ancho y con los bordes redondeados)*/}
+          {numbers.map(number => (
+            <button className={`grey ${number === 0 && 'big-h'}`} key={number} onClick={this.handleClick} id={numbers_operators_dict[number]}>{number}</button>
+          ))}
+          
+          {/* En tercer y último lugar, se añade el botón del decimal (.), con la clase para establecerlo de color rojo. */}
+          <button className="red" id="decimal" onClick={this.handleClick}>.</button>
+        </div>
+        
+        {/* En el contenedor de operadores, en primer lugar, se mapea los operadores con el array de operadores (suma, resta, multiplicación y división) para crear los botones de operadores, ponerlos con fondo azul, y hacer que ejecuten la función 'handleClick' cuando son pulsados. */}
+        <div className="ops-container">{operators.map(operator => (
+          <button className="blue" key={operator} id={numbers_operators_dict[operator]} onClick={this.handleClick}>{operator}</button>
+          ))}
+          
+          {/* Falta el botón de un operador (igual), por lo que en segundo y último lugar, se añade manualmente siguiendo las mismas directrices que los botones de operación anteriores. */}
+          <button className="blue" onClick={this.handleClick} id="equals">=</button>
+        </div>
+      </div>
+    )
+  }
+}
+
+/* Se renderiza el componente React al elemento HTML con id = 'app' */
+ReactDOM.render(<App />, document.getElementById('app'));
