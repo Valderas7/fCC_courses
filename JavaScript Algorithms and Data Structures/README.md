@@ -1,4 +1,4 @@
-# JavaScript Algorithms and Data Structures
+# ESTRUCTURA DE DATOS Y ALGORITMOS EN JAVASCRIPT
 
 En este apartado se recopilan los archivos requeridos de los proyectos NO guiados que se piden para obtener la certificación de estructuras de datos y algoritmos  de `JavaScript` de la web `freeCodeCamp`.
 

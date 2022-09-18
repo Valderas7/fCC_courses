@@ -1,4 +1,4 @@
-# Responsive Web Design
+# DISEÑO WEB ADAPTABLE
 
 En este apartado se recopilan los archivos requeridos de los proyectos NO guiados ya finalizados que se han pedido para obtener la certificación de diseño web adaptable de `HTML5` y `CSS3` de la web `freeCodeCamp`.
 

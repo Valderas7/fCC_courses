@@ -1,7 +1,10 @@
-# Certificado de Machine Learning
+# APRENDIZAJE AUTOMÁTICO
 
-### Composición del curso
+En este repositorio se recopilan los archivos requeridos de los proyectos NO guiados que se piden para obtener la certificación de `Machine Learning` de la web `freeCodeCamp`.
 
+------------
+
+##### Resumen:
 El curso consta de dos partes claramente diferenciadas: una **teórica** y otra **práctica**.
 
 - En la parte de teoría hay **seis notebooks** o cuadernos con códigos y explicaciones en texto dónde se explican temas fundamentales dentro del mundo del *Machine Learning*: 
