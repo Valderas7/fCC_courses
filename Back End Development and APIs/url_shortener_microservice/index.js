@@ -110,8 +110,11 @@ app.post('/api/shorturl', post_Middleware, (request, response) => {
 // Método GET para redirigir el navegador a una página web al introducir el parámetro 'short_url' en la barra de direcciones. Para ello se busca en la colección el documento JSON cuya 'short_url' coincida con el parámetro introducido, y se redirige la respuesta a la web introducida en el campo 'original_url' de dicho documento
 app.get('/api/shorturl/:short_url', (request, response) => {
   URL.findOne({short_url: request.params.short_url}, (error, result) => {
-    if(!error) {
+    if(!error && result != undefined) {
       response.redirect(result['original_url'])
+    }
+    else {
+      response.json('URL not found')
     }
   })
 })
