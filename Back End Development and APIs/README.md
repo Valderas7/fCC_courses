@@ -9,5 +9,5 @@ En este apartado se recopilan los archivos requeridos de los proyectos NO guiado
 
 - **request_header_parser_microservice**: Creación de un microservicio que muestra información de la solicitud (la `IP`; el idioma favorito usado para la conexión con el microservicio; y el software elegido para la conexión con el microservicio).
 
-- **url_shortener_microservice**: Creación de un microservicio que devuelve un documento `JSON` con un valor numérico entero y único por cada página web introducida en el formulario. Cada una de estas páginas web introducidas en el formulario se registran como un documento `JSON` en una colección de una base de datos `MongoDB`. Además, si se introduce en la `URL` el valor de un entero numérico, el navegador redireccionará a la página web asociada con el valor de dicho número entero. 
+- **url_shortener_microservice**: Creación de un microservicio que devuelve un documento `JSON` con un valor numérico entero y único por cada página web introducida en el formulario. Cada una de estas páginas web introducidas en el formulario se registran como un documento `JSON` junto con sus números enteros en una colección de una base de datos `MongoDB`. Además, si se introduce en la `URL` el valor de un entero numérico, el navegador redireccionará a la página web asociada con el valor de dicho número entero. 
 
