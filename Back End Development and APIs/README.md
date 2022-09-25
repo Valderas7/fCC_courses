@@ -11,5 +11,4 @@ En este apartado se recopilan los archivos requeridos de los proyectos NO guiado
 
 - **url_shortener_microservice**: Creación de un microservicio que devuelve una respuesta `JSON` con un valor numérico entero y único por cada página web introducida en el formulario. Cada una de estas páginas web introducidas en el formulario se registran también como un documento `JSON` junto con sus números enteros en una colección de una base de datos `MongoDB`. Además, si se introduce en la `URL` el valor de un entero numérico, el navegador redireccionará a la página web asociada con el valor de dicho número entero.
 
-- **file_metadata_microservice**: Creación de un microservicio que permite subir cualquier archivo de nuestro PC, del que se dará una respuesta `JSON` con su nombre de archivo original, el tipo de archivo, y su tamaño en bytes.
-
+- **file_metadata_microservice**: Creación de un microservicio de metadatos de archivos. Permite subir cualquier archivo de nuestro PC, del que se dará una respuesta `JSON` con su nombre de archivo original, el tipo de archivo, y su tamaño en bytes.
