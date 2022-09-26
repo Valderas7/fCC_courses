@@ -1,0 +1,6 @@
+# Exercise Tracker
+
+##### Resumen:
+- **exercise_tracker_microservice**: Creación de un microservicio que se comporta como un rastreador de ejercicios. Por un lado permite registrar usuarios (y consultar cuántos usuarios registrados hay ya), guardándolos en una colección de `MongoDB` y obteniendo una respuesta `JSON` con el nombre de usuario y su `ID`. Además, permite añadir ejercicios para cada usuario especificando una descripción, una duración (en minutos) y una fecha para cada ejercicio (si no se proporciona una fecha, ésta será la fecha actual), guardándolos en otra colección en `MongoDB`, obteniéndose otra respuesta `JSON` con los datos mencionados. Por otra parte, se puede consultar los registros (logs) de ejercicios de cada usuario, de forma que se muestre en una respuesta `JSON` el número total de ejercicios que ha realizado un usuario (además de la descripción, duración y fecha para cada uno de ellos). Por último, y opcionalmente, se pueden consultar los registros de ejercicios de cada usuario durante un intervalo de tiempo específico (especificando una fecha inicial y una fecha límite), incluso limitando los resultados a un número concreto de ejercicios.
+
+<h2 align="center"><a href="https://boilerplate-project-exercisetracker.antoniovalderas.repl.co/">DEMOSTRACIÓN FUNCIONAL DEL MICROSERVICIO</a></h2>
